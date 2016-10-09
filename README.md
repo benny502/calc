@@ -6,5 +6,6 @@
 以ubuntu为例：sudo apt-get install flex bison;
 
 #安装方法：
-cd $INSTALL_DIR
+cd $INSTALL_DIR  
+
 make
