@@ -27,8 +27,6 @@ int yywrap(void){
 };
 
 . {
-	fprintf(stderr,"lexical error.\n");
-	exit(1);
 }
 %%
 

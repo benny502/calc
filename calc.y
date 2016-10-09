@@ -25,6 +25,11 @@ line
 	{
 		printf(">> %lf\n",$1);
 	}
+	| error CR
+	{
+		yyclearin;
+		yyerrok;
+	}
 	;
 
 expression
@@ -63,7 +68,7 @@ primary_expression
 
 int yyerror(char const *str){
 	extern char *yytext;
-	printf(stderr,"parser error near %s\n",yytext);
+	fprintf(stderr,"parser error near %s\n",yytext);
 	return 0;
 }
 

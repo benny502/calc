@@ -801,16 +801,14 @@ case 10:
 YY_RULE_SETUP
 #line 29 "calc.l"
 {
-	fprintf(stderr,"lexical error.\n");
-	exit(1);
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 33 "calc.l"
+#line 31 "calc.l"
 ECHO;
 	YY_BREAK
-#line 814 "lex.yy.c"
+#line 812 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1808,7 +1806,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 33 "calc.l"
+#line 31 "calc.l"
 
 
 
