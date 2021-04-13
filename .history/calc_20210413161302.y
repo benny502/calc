@@ -11,7 +11,7 @@
 
 %token <double_value> DOUBLE_LITERAL
 %token ADD SUB MUL DIV CR LT RT
-%type <double_value> primary_expression expression line line_list
+%type <double_value> primary_expression expression term line line_list
 
 %%
 
@@ -54,7 +54,7 @@ expression
 
 primary_expression
 	: DOUBLE_LITERAL
-	| LT expression RT
+	| LT term RT
 	{
 		$$ = $2;
 	}

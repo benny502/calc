@@ -11,7 +11,7 @@
 
 %token <double_value> DOUBLE_LITERAL
 %token ADD SUB MUL DIV CR LT RT
-%type <double_value> primary_expression expression line line_list
+%type <double_value> primary_expression expression term line line_list
 
 %%
 
@@ -33,20 +33,32 @@ line
 	;
 
 expression
-	: primary_expression
-	| primary_expression MUL primary_expression
-	{
-		$$ = $1 * $3;
-	}
-	| primary_expression DIV primary_expression 
-	{
-		$$ = $1 / $3;
-	}
-	| primary_expression ADD primary_expression
+	: term
+	| expression ADD term
 	{
 		$$ = $1 + $3;
 	}
-	| primary_expression SUB primary_expression
+	| expression SUB term
+	{
+		$$ = $1 - $3;
+	}
+	;
+
+term
+	: primary_expression
+	| term MUL primary_expression
+	{
+		$$ = $1 * $3;
+	}
+	| term DIV primary_expression 
+	{
+		$$ = $1 / $3;
+	}
+	| term ADD primary_expression
+	{
+		$$ = $1 + $3;
+	}
+	| term SUB primary_expression
 	{
 		$$ = $1 - $3;
 	}
@@ -54,7 +66,7 @@ expression
 
 primary_expression
 	: DOUBLE_LITERAL
-	| LT expression RT
+	| LT term RT
 	{
 		$$ = $2;
 	}

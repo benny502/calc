@@ -1,4 +1,4 @@
-Grammar
+语法
 
     0 $accept: line_list $end
 
@@ -8,261 +8,233 @@ Grammar
     3 line: expression CR
     4     | error CR
 
-    5 expression: term
-    6           | expression ADD term
-    7           | expression SUB term
+    5 expression: primary_expression
+    6           | primary_expression MUL primary_expression
+    7           | primary_expression DIV primary_expression
+    8           | primary_expression ADD primary_expression
+    9           | primary_expression SUB primary_expression
 
-    8 term: primary_expression
-    9     | term MUL primary_expression
-   10     | term DIV primary_expression
-   11     | LT expression RT
-
-   12 primary_expression: DOUBLE_LITERAL
+   10 primary_expression: DOUBLE_LITERAL
+   11                   | LT expression RT
 
 
-Terminals, with rules where they appear
+终结语词，附有它们出现处的规则
 
 $end (0) 0
 error (256) 4
-DOUBLE_LITERAL (258) 12
-ADD (259) 6
-SUB (260) 7
-MUL (261) 9
-DIV (262) 10
+DOUBLE_LITERAL <double_value> (258) 10
+ADD (259) 8
+SUB (260) 9
+MUL (261) 6
+DIV (262) 7
 CR (263) 3 4
 LT (264) 11
 RT (265) 11
 
 
-Nonterminals, with rules where they appear
+非终结语词，附有它们出现处的规则
 
 $accept (11)
-    on left: 0
-line_list (12)
-    on left: 1 2, on right: 0 2
-line (13)
-    on left: 3 4, on right: 1 2
-expression (14)
-    on left: 5 6 7, on right: 3 6 7 11
-term (15)
-    on left: 8 9 10 11, on right: 5 6 7 9 10
-primary_expression (16)
-    on left: 12, on right: 8 9 10
+    于左侧： 0
+line_list <double_value> (12)
+    于左侧： 1 2, 于右侧： 0 2
+line <double_value> (13)
+    于左侧： 3 4, 于右侧： 1 2
+expression <double_value> (14)
+    于左侧： 5 6 7 8 9, 于右侧： 3 11
+primary_expression <double_value> (15)
+    于左侧： 10 11, 于右侧： 5 6 7 8 9
 
 
-State 0
+状态 0
 
     0 $accept: . line_list $end
 
-    error           shift, and go to state 1
-    DOUBLE_LITERAL  shift, and go to state 2
-    LT              shift, and go to state 3
+    error           偏移，并进入状态 1
+    DOUBLE_LITERAL  偏移，并进入状态 2
+    LT              偏移，并进入状态 3
 
-    line_list           go to state 4
-    line                go to state 5
-    expression          go to state 6
-    term                go to state 7
-    primary_expression  go to state 8
+    line_list           转到状态 4
+    line                转到状态 5
+    expression          转到状态 6
+    primary_expression  转到状态 7
 
 
-State 1
+状态 1
 
     4 line: error . CR
 
-    CR  shift, and go to state 9
+    CR  偏移，并进入状态 8
 
 
-State 2
+状态 2
 
-   12 primary_expression: DOUBLE_LITERAL .
+   10 primary_expression: DOUBLE_LITERAL .
 
-    $default  reduce using rule 12 (primary_expression)
-
-
-State 3
-
-   11 term: LT . expression RT
-
-    DOUBLE_LITERAL  shift, and go to state 2
-    LT              shift, and go to state 3
-
-    expression          go to state 10
-    term                go to state 7
-    primary_expression  go to state 8
+    $default  使用规则 10 以归约 (primary_expression)
 
 
-State 4
+状态 3
+
+   11 primary_expression: LT . expression RT
+
+    DOUBLE_LITERAL  偏移，并进入状态 2
+    LT              偏移，并进入状态 3
+
+    expression          转到状态 9
+    primary_expression  转到状态 7
+
+
+状态 4
 
     0 $accept: line_list . $end
     2 line_list: line_list . line
 
-    $end            shift, and go to state 11
-    error           shift, and go to state 1
-    DOUBLE_LITERAL  shift, and go to state 2
-    LT              shift, and go to state 3
+    $end            偏移，并进入状态 10
+    error           偏移，并进入状态 1
+    DOUBLE_LITERAL  偏移，并进入状态 2
+    LT              偏移，并进入状态 3
 
-    line                go to state 12
-    expression          go to state 6
-    term                go to state 7
-    primary_expression  go to state 8
+    line                转到状态 11
+    expression          转到状态 6
+    primary_expression  转到状态 7
 
 
-State 5
+状态 5
 
     1 line_list: line .
 
-    $default  reduce using rule 1 (line_list)
+    $default  使用规则 1 以归约 (line_list)
 
 
-State 6
+状态 6
 
     3 line: expression . CR
-    6 expression: expression . ADD term
-    7           | expression . SUB term
 
-    ADD  shift, and go to state 13
-    SUB  shift, and go to state 14
-    CR   shift, and go to state 15
+    CR  偏移，并进入状态 12
 
 
-State 7
+状态 7
 
-    5 expression: term .
-    9 term: term . MUL primary_expression
-   10     | term . DIV primary_expression
+    5 expression: primary_expression .
+    6           | primary_expression . MUL primary_expression
+    7           | primary_expression . DIV primary_expression
+    8           | primary_expression . ADD primary_expression
+    9           | primary_expression . SUB primary_expression
 
-    MUL  shift, and go to state 16
-    DIV  shift, and go to state 17
+    ADD  偏移，并进入状态 13
+    SUB  偏移，并进入状态 14
+    MUL  偏移，并进入状态 15
+    DIV  偏移，并进入状态 16
 
-    $default  reduce using rule 5 (expression)
-
-
-State 8
-
-    8 term: primary_expression .
-
-    $default  reduce using rule 8 (term)
+    $default  使用规则 5 以归约 (expression)
 
 
-State 9
+状态 8
 
     4 line: error CR .
 
-    $default  reduce using rule 4 (line)
+    $default  使用规则 4 以归约 (line)
 
 
-State 10
+状态 9
 
-    6 expression: expression . ADD term
-    7           | expression . SUB term
-   11 term: LT expression . RT
+   11 primary_expression: LT expression . RT
 
-    ADD  shift, and go to state 13
-    SUB  shift, and go to state 14
-    RT   shift, and go to state 18
+    RT  偏移，并进入状态 17
 
 
-State 11
+状态 10
 
     0 $accept: line_list $end .
 
-    $default  accept
+    $default  接受
 
 
-State 12
+状态 11
 
     2 line_list: line_list line .
 
-    $default  reduce using rule 2 (line_list)
+    $default  使用规则 2 以归约 (line_list)
 
 
-State 13
-
-    6 expression: expression ADD . term
-
-    DOUBLE_LITERAL  shift, and go to state 2
-    LT              shift, and go to state 3
-
-    term                go to state 19
-    primary_expression  go to state 8
-
-
-State 14
-
-    7 expression: expression SUB . term
-
-    DOUBLE_LITERAL  shift, and go to state 2
-    LT              shift, and go to state 3
-
-    term                go to state 20
-    primary_expression  go to state 8
-
-
-State 15
+状态 12
 
     3 line: expression CR .
 
-    $default  reduce using rule 3 (line)
+    $default  使用规则 3 以归约 (line)
 
 
-State 16
+状态 13
 
-    9 term: term MUL . primary_expression
+    8 expression: primary_expression ADD . primary_expression
 
-    DOUBLE_LITERAL  shift, and go to state 2
+    DOUBLE_LITERAL  偏移，并进入状态 2
+    LT              偏移，并进入状态 3
 
-    primary_expression  go to state 21
-
-
-State 17
-
-   10 term: term DIV . primary_expression
-
-    DOUBLE_LITERAL  shift, and go to state 2
-
-    primary_expression  go to state 22
+    primary_expression  转到状态 18
 
 
-State 18
+状态 14
 
-   11 term: LT expression RT .
+    9 expression: primary_expression SUB . primary_expression
 
-    $default  reduce using rule 11 (term)
+    DOUBLE_LITERAL  偏移，并进入状态 2
+    LT              偏移，并进入状态 3
 
-
-State 19
-
-    6 expression: expression ADD term .
-    9 term: term . MUL primary_expression
-   10     | term . DIV primary_expression
-
-    MUL  shift, and go to state 16
-    DIV  shift, and go to state 17
-
-    $default  reduce using rule 6 (expression)
+    primary_expression  转到状态 19
 
 
-State 20
+状态 15
 
-    7 expression: expression SUB term .
-    9 term: term . MUL primary_expression
-   10     | term . DIV primary_expression
+    6 expression: primary_expression MUL . primary_expression
 
-    MUL  shift, and go to state 16
-    DIV  shift, and go to state 17
+    DOUBLE_LITERAL  偏移，并进入状态 2
+    LT              偏移，并进入状态 3
 
-    $default  reduce using rule 7 (expression)
+    primary_expression  转到状态 20
 
 
-State 21
+状态 16
 
-    9 term: term MUL primary_expression .
+    7 expression: primary_expression DIV . primary_expression
 
-    $default  reduce using rule 9 (term)
+    DOUBLE_LITERAL  偏移，并进入状态 2
+    LT              偏移，并进入状态 3
+
+    primary_expression  转到状态 21
 
 
-State 22
+状态 17
 
-   10 term: term DIV primary_expression .
+   11 primary_expression: LT expression RT .
 
-    $default  reduce using rule 10 (term)
+    $default  使用规则 11 以归约 (primary_expression)
+
+
+状态 18
+
+    8 expression: primary_expression ADD primary_expression .
+
+    $default  使用规则 8 以归约 (expression)
+
+
+状态 19
+
+    9 expression: primary_expression SUB primary_expression .
+
+    $default  使用规则 9 以归约 (expression)
+
+
+状态 20
+
+    6 expression: primary_expression MUL primary_expression .
+
+    $default  使用规则 6 以归约 (expression)
+
+
+状态 21
+
+    7 expression: primary_expression DIV primary_expression .
+
+    $default  使用规则 7 以归约 (expression)
